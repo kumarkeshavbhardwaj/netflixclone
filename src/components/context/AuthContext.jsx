@@ -8,7 +8,10 @@ export function AuthContextProvider({children}) {
     const [user, setUser] = useState(null);
 
     function signUp(email, password) {
-        return createUserWithEmailAndPassword(auth, email, password);
+        console.log('signUp running of context')
+        return createUserWithEmailAndPassword(auth, email, password).then((e)=>{
+            console.log(e.user)
+        });
 
     }
 

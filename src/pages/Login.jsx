@@ -1,7 +1,29 @@
-import React from 'react'
-import { Link } from 'react-router-dom'
+import { React, } from 'react'
+import { Link, useNavigate } from 'react-router-dom'
+import { UserAuth } from '../components/context/AuthContext'
+import { useState } from 'react'
+
 
 const Login = () => {
+  const [email, setEmail] = useState('')
+    const [password, setPassword] = useState('')
+    const {user, logIn} = UserAuth()
+    const [error, setError] = useState('')
+    const navigate = useNavigate()
+  
+    const handleSubmit = async (e) => {
+      e.preventDefault()
+      setError('')
+  
+      try {
+        await logIn(email, password)
+        navigate('/')
+      } catch (error) {
+        setError(error.message)
+      }
+    }
+
+
   return (
       <>
       <div className='w-full h-screen'>
@@ -14,9 +36,10 @@ const Login = () => {
         <h1 className='text-3xl font-bold'>
           Sign In
         </h1>
-        <form className='w-full flex flex-col py-4'>
-          <input className='p-3 my-2 bg-gray-700 rounded' type="email" placeholder='Email' autoComplete='email'/>
-          <input className='p-3 my-2 bg-gray-700 rounded' type="password" placeholder='Password'/>
+        {error ? <p className='p-3 bg-red-400 my-2'>{error}</p> : null}
+        <form onSubmit={handleSubmit} className='w-full flex flex-col py-4'>
+          <input onChange={(e)=> setEmail(e.target.value)} className='p-3 my-2 bg-gray-700 rounded' type="email" placeholder='Email' autoComplete='email'/>
+          <input onChange={(e)=> setPassword(e.target.value)} className='p-3 my-2 bg-gray-700 rounded' type="password" placeholder='Password'/>
           <button className='bg-red-600 py-3 my-6 rounded font-bold'>
             Sign In
           </button>
